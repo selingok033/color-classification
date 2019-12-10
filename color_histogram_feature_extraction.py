@@ -63,7 +63,7 @@ def color_histogram_of_training_image(img_name):
 
     # load the image
     image = cv2.imread(img_name)
-
+    #image[np.where((image == [255, 255, 255]).all(axis=2))] = [0, 0, 0];
     chans = cv2.split(image)
     colors = ('b', 'g', 'r')
     features = []
@@ -86,6 +86,8 @@ def color_histogram_of_training_image(img_name):
         elif counter == 3:
             red = str(elem)
             feature_data = red + ',' + green + ',' + blue
+            if (red == "255") & (green == "255") & (blue == "255"):
+                print(img_name)
 
     with open('training.data', 'a') as myfile:
         myfile.write(feature_data + ',' + data_source + '\n')
