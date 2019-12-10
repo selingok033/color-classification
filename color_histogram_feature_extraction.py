@@ -9,7 +9,7 @@ import knn_classifier
 
 def color_histogram_of_test_image(test_src_image):
 
-    for f in os.listdir("test_dataset"):
+    for f in sorted(os.listdir("test_dataset")):
         # load the image
         image = cv2.imread(test_src_image+f)
 
@@ -65,10 +65,11 @@ def color_histogram_of_training_image(img_name):
     image = cv2.imread(img_name)
 
     chans = cv2.split(image)
-    colors = ('r', 'g', 'b')
+    colors = ('b', 'g', 'r')
     features = []
     feature_data = ''
     counter = 0
+
     for (chan, color) in zip(chans, colors):
         counter = counter + 1
 
