@@ -1,20 +1,14 @@
 import csv
-import random
 import math
 import operator
-import cv2
 
-
-# calculation of euclidead distance
 def calculateEuclideanDistance(variable1, variable2, length):
     distance = 0
     for x in range(length):
         distance += pow(variable1[x] - variable2[x], 2)
     return math.sqrt(distance)
 
-
-# get k nearest neigbors
-def kNearestNeighbors(training_feature_vector, testInstance, k):
+def kNearestNeighbors(training_feature_vector, testInstance):
     distances = []
     length = len(testInstance)
     for x in range(len(training_feature_vector)):
@@ -23,24 +17,22 @@ def kNearestNeighbors(training_feature_vector, testInstance, k):
         distances.append((training_feature_vector[x], dist))
     distances.sort(key=operator.itemgetter(1))
     neighbors = []
-    for x in range(k):
+    for x in range(0,3):
         neighbors.append(distances[x][0])
     return neighbors
 
-
-# votes of neighbors
 def responseOfNeighbors(neighbors):
-    all_possible_neighbors = {}
-    for x in range(len(neighbors)):
-        response = neighbors[x][-1]
-        if response in all_possible_neighbors:
-            all_possible_neighbors[response] += 1
-        else:
-            all_possible_neighbors[response] = 1
-    sortedVotes = sorted(all_possible_neighbors.items(),
-                         key=operator.itemgetter(1), reverse=True)
-    return sortedVotes[0][0]
+    n1 = neighbors[0][3]
+    n2 = neighbors[1][3]
+    n3 = neighbors[2][3]
 
+    if(n1==n2) | (n1==n3):
+        label = n1
+    elif(n2==n3):
+        label = n2
+    else:
+        label = n3
+    return label
 
 # Load image feature data to training feature vectors and test feature vector
 def loadDataset(
@@ -65,7 +57,6 @@ def loadDataset(
                 dataset[x][y] = float(dataset[x][y])
             test_feature_vector.append(dataset[x])
 
-
 def main(training_data, test_data):
     training_feature_vector = []  # training feature vector
     test_feature_vector = []  # test feature vector
@@ -73,7 +64,7 @@ def main(training_data, test_data):
     classifier_prediction = []  # predictions
     k = 3
     for x in range(len(test_feature_vector)):
-        neighbors = kNearestNeighbors(training_feature_vector, test_feature_vector[x], k)
+        neighbors = kNearestNeighbors(training_feature_vector, test_feature_vector[x])
         result = responseOfNeighbors(neighbors)
         classifier_prediction.append(result)
         print(classifier_prediction[0])
